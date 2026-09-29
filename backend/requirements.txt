@@ -13,6 +13,8 @@ pydantic-settings==2.5.*
 
 # --- Structured logging ---
 python-json-logger==2.0.*
+PyJWT==2.10.*
+bcrypt==4.*
 
 # --- Development / tooling ---
 ruff==0.6.*

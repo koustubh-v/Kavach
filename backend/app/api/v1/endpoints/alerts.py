@@ -4,13 +4,17 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query
 
-from app.api.deps import get_alert_service
+from app.api.deps import get_alert_service, get_current_active_user
 from app.core.constants import Severity
 from app.schemas.alert import AlertRead
 from app.schemas.common import Paginated, SuccessResponse
 from app.services.alert_service import AlertService
 
-router = APIRouter(prefix="/alerts", tags=["alerts"])
+router = APIRouter(
+    prefix="/alerts",
+    tags=["alerts"],
+    dependencies=[Depends(get_current_active_user)],
+)
 
 
 @router.get("", response_model=SuccessResponse[Paginated[AlertRead]])

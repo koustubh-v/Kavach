@@ -44,3 +44,10 @@ class UnauthorizedError(AppError):
 
     status_code = 401
     error_code = "UNAUTHORIZED"
+
+
+class ForbiddenError(AppError):
+    """Raised when an authenticated user lacks permission or is inactive."""
+
+    status_code = 403
+    error_code = "FORBIDDEN"

@@ -64,9 +64,12 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
 
     # --- Security ---
-    secret_key: str = ""
+    secret_key: str = Field(default="", repr=False)
     access_token_expire_minutes: int = 60
     edge_api_key: str = Field(default="", repr=False)
+    demo_admin_password: str = Field(default="", repr=False)
+    demo_operator_password: str = Field(default="", repr=False)
+    demo_viewer_password: str = Field(default="", repr=False)
 
     @property
     def cors_origin_list(self) -> list[str]:

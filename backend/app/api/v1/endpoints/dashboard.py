@@ -2,11 +2,15 @@
 
 from fastapi import APIRouter, Depends
 
-from app.api.deps import get_prediction_service
+from app.api.deps import get_current_active_user, get_prediction_service
 from app.schemas.dashboard import DashboardSummary, FaultDistribution
 from app.services.prediction import PredictionService
 
-router = APIRouter(prefix="/dashboard", tags=["dashboard"])
+router = APIRouter(
+    prefix="/dashboard",
+    tags=["dashboard"],
+    dependencies=[Depends(get_current_active_user)],
+)
 
 
 @router.get("/summary", response_model=DashboardSummary)

@@ -26,6 +26,17 @@ class Severity(StrEnum):
     CRITICAL = "CRITICAL"
 
 
+class UserRole(StrEnum):
+    """Dashboard account roles."""
+
+    ADMIN = "ADMIN"
+    OPERATOR = "OPERATOR"
+    VIEWER = "VIEWER"
+
+
+JWT_ALGORITHM = "HS256"
+
+
 ALERT_DEDUP_WINDOW_MINUTES = 5
 CONFIDENCE_MEDIUM_THRESHOLD = 0.60
 CONFIDENCE_HIGH_THRESHOLD = 0.80

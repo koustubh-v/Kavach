@@ -7,6 +7,7 @@ No migrations are used — the ORM models are the source of truth.
 import app.models  # noqa: F401
 from app.core.logging import get_logger
 from app.database.base import Base
+from app.database.seed import seed_demo_users
 from app.database.session import engine
 
 logger = get_logger(__name__)
@@ -16,4 +17,5 @@ async def init_db() -> None:
     """Create all tables if they do not already exist."""
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+    await seed_demo_users()
     logger.info("Database tables ensured")

@@ -69,6 +69,14 @@ def create_app() -> FastAPI:
             request.url.path,
             exc.message,
         )
+        return JSONResponse(
+            status_code=exc.status_code,
+            content={
+                "success": False,
+                "message": exc.message,
+                "error_code": exc.error_code,
+            },
+        )
 
     @app.exception_handler(APIKeyAuthenticationError)
     async def api_key_authentication_error_handler(
@@ -83,14 +91,6 @@ def create_app() -> FastAPI:
         return JSONResponse(
             status_code=401,
             content={"success": False, "message": exc.message},
-        )
-        return JSONResponse(
-            status_code=exc.status_code,
-            content={
-                "success": False,
-                "message": exc.message,
-                "error_code": exc.error_code,
-            },
         )
 
     @app.exception_handler(Exception)

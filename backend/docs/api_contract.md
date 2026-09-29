@@ -12,6 +12,12 @@
 
 # Authentication
 
+Dashboard users authenticate with email and password and use a signed JWT.
+Tokens are signed with the existing `SECRET_KEY` setting; no separate JWT
+signing key is used. Set `SECRET_KEY` to a secure random value. Demo accounts
+are seeded at startup only when all three distinct password settings are set:
+`DEMO_ADMIN_PASSWORD`, `DEMO_OPERATOR_PASSWORD`, and `DEMO_VIEWER_PASSWORD`.
+
 `POST /internal/predictions` requires the Edge AI API key in the `X-API-Key`
 header. Configure the expected value through the `EDGE_API_KEY` environment
 variable; requests are rejected if it is missing or invalid.
@@ -19,6 +25,62 @@ variable; requests are rejected if it is missing or invalid.
 ```http
 X-API-Key: <your-edge-api-key>
 ```
+
+---
+
+# Dashboard Authentication
+
+## POST /auth/login
+
+Authenticates a seeded dashboard user. No registration endpoint is available.
+
+### Postman Request
+
+```http
+POST {{base_url}}/api/v1/auth/login
+Content-Type: application/json
+```
+
+```json
+{
+  "email": "admin@kavach.com",
+  "password": "{{admin_password}}"
+}
+```
+
+The response contains `data.access_token`, `data.token_type` (`bearer`), and a
+public user profile. It never includes the password hash.
+
+### Postman Tests
+
+```javascript
+pm.environment.set("access_token", pm.response.json().data.access_token);
+```
+
+## GET /auth/me
+
+Returns the current active user. Send this header on protected requests:
+
+```http
+Authorization: Bearer {{access_token}}
+```
+
+## Protected Dashboard Endpoints
+
+JWT authentication is required for all `/alerts` endpoints, all
+`/predictions` endpoints, and `/dashboard/summary` and
+`/dashboard/fault-distribution`.
+
+The WebSocket also requires a valid active-user JWT before accepting a
+connection:
+
+```text
+ws://{{host}}/api/v1/ws?token={{access_token}}
+```
+
+Missing, expired, or invalid JWTs are rejected; inactive users receive HTTP 403
+for REST requests. These dashboard credentials are separate from Edge AI's
+`X-API-Key` authentication for `POST /internal/predictions`.
 
 ---
 

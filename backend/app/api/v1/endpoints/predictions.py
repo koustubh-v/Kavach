@@ -7,13 +7,17 @@ GET /predictions/stats
 
 from fastapi import APIRouter, Depends, Query
 
-from app.api.deps import get_prediction_service
+from app.api.deps import get_current_active_user, get_prediction_service
 from app.core.exceptions import NotFoundError
 from app.schemas.common import Paginated, SuccessResponse
 from app.schemas.prediction import PredictionRead, PredictionStats
 from app.services.prediction import PredictionService
 
-router = APIRouter(prefix="/predictions", tags=["predictions"])
+router = APIRouter(
+    prefix="/predictions",
+    tags=["predictions"],
+    dependencies=[Depends(get_current_active_user)],
+)
 
 
 @router.get("/latest", response_model=SuccessResponse[PredictionRead])
